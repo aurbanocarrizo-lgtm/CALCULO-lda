@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo Capitales Recomendados LDA 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            padding: 5px;
+            min-height: 100vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(220, 53, 69, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: fit-content;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 8px 15px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+
+        .header p {
+            font-size: 11px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #dc3545;
+            border-bottom: 3px solid #dc3545;
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 10px 15px;
+            animation: fadeIn 0.3s ease;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: 600;
+            color: #333;
+            font-size: 12px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 12px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .form-group input[type="number"].yellow-input {
+            background-color: #fffacd;
+            border-color: #ffd700;
+        }
+
+        .form-group input[type="number"].blue-input {
+            background-color: #e6f2ff;
+            border-color: #4da6ff;
+        }
+
+        .form-group {
+            margin-bottom: 8px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        @media (max-width: 768px) {
+            .form-row,
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .results-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-top: 6px;
+            border-left: 5px solid #dc3545;
+            font-size: 13px;
+        }
+
+        .info-box {
+            background: #ffe6e6;
+            border-left: 4px solid #dc3545;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #c82333;
+            line-height: 1.6;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 6px;
+            margin-right: 6px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.secondary {
+            background: #f5f5f5;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+        }
+
+        .button.secondary:hover {
+            background: #f0f0f0;
+        }
+
+        /* TOOLTIP CON ICONO (i) */
+        .info-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            background: #ffc107;
+            color: #333;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+            cursor: help;
+            position: relative;
+            vertical-align: middle;
+            opacity: 1;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(255, 193, 7, 0.4);
+        }
+
+        .info-icon:hover {
+            background: #ffb300;
+            box-shadow: 0 4px 8px rgba(255, 193, 7, 0.6);
+            transform: scale(1.1);
+        }
+
+        .info-icon:hover::after,
+        .info-icon:hover::before {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .info-icon::after {
+            content: attr(data-tooltip);
+            visibility: hidden;
+            opacity: 0;
+            width: 220px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: normal;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .info-icon::before {
+            content: "";
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+            transition: opacity 0.3s;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .radio-option {
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 40px 6px 8px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-weight: 500;
+            color: #333;
+            position: relative;
+            gap: 8px;
+            flex: 1;
+            font-size: 12px;
+        }
+
+        .radio-label:hover {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .radio-label::before {
+            content: '';
+            position: absolute;
+            right: 12px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            background: white;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label::before {
+            background: white;
+            border-color: white;
+            box-shadow: inset 0 0 0 4px #dc3545;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label .info-icon {
+            background: #ffc107;
+            color: #333;
+            box-shadow: 0 2px 6px rgba(255, 193, 7, 0.8);
+        }
+
+
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: normal;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .radio-label .info-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 11px;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label .info-icon {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .calculator-inputs {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #f0f0f0;
+            margin-bottom: 5px;
+        }
+
+        .calc-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            align-items: start;
+            height: auto;
+            min-height: 100%;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 1200px) {
+            .calc-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calc-left {
+            min-width: 0;
+        }
+
+        .calc-right {
+            min-width: 0;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 6px;
+            font-size: 11px;
+        }
+
+        .data-table td {
+            padding: 4px 6px;
+            border: 1px solid #999;
+            background: #f0f0f0;
+        }
+
+        .data-table td:nth-child(2) {
+            text-align: right;
+        }
+
+        .data-table td.yellow-cell {
+            background-color: #fffacd;
+            font-weight: bold;
+        }
+
+        .data-table td.blue-cell {
+            background-color: #e6f2ff;
+        }
+
+        .data-table td.green-cell {
+            background-color: #c6e0b4;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .calculation-details {
+            background: #f5f5f5;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        }
+
+        .calculation-details p {
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .calculation-details strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Cálculo Capitales Recomendados LDA 2026</h1>
+            <p>Herramienta de cálculo de capitales recomendados para seguros de vivienda</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('calculador')">Calculador</button>
+        </div>
+
+        <!-- TAB: CALCULADOR -->
+        <div id="calculador" class="tab-content active">
+            <div class="info-box">
+                <strong>ℹ️ Instrucciones:</strong> Rellena los campos amarillos con datos manuales (Superficie) y selecciona las opciones azules. Los resultados aparecerán en verde. Pasa el ratón sobre el icono (i) para ver más información.
+            </div>
+
+            <div class="calc-layout">
+                <!-- LADO IZQUIERDO: FORMULARIO -->
+                <div class="calc-left">
+                    <div class="calculator-inputs">
+                        <h2 style="color: #dc3545; margin-bottom: 20px;">📋 Datos de la Póliza</h2>
+                        
+                        <!-- SUPERFICIE -->
+                        <div class="form-group">
+                            <label>Superficie (m²) * <span class="info-icon" data-tooltip="Superficie útil de la vivienda en metros cuadrados">i</span></label>
+                            <input type="number" id="superficie" class="yellow-input" placeholder="Ej: 100" value="100" min="0" step="0.1" oninput="calcular()">
+                            <small style="color: #999; font-size: 11px;">Campo manual (amarillo)</small>
+                        </div>
+
+                        <!-- TIPO DE VIVIENDA CON RADIO BUTTONS -->
+                        <div class="form-group">
+                            <label style="margin-bottom: 12px;">Tipo de Vivienda * <span class="info-icon" data-tooltip="Selecciona el tipo de construcción de la vivienda">i</span></label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="tipo_piso" name="tipoVivienda" value="piso" checked onchange="calcular()">
+                                    <label for="tipo_piso" class="radio-label">
+                                        Piso / Piso dúplex
+                                        <span class="info-icon" data-tooltip="Vivienda situada en un bloque de más viviendas">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="tipo_adosado" name="tipoVivienda" value="adosado" onchange="calcular()">
+                                    <label for="tipo_adosado" class="radio-label">
+                                        Chalé Adosado
+                                        <span class="info-icon" data-tooltip="Vivienda unifamiliar con paredes colindantes en poblaciones de +10.000 habitantes">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="tipo_indep" name="tipoVivienda" value="independiente" onchange="calcular()">
+                                    <label for="tipo_indep" class="radio-label">
+                                        Chalé Independiente
+                                        <span class="info-icon" data-tooltip="Vivienda unifamiliar que no comparte paredes con otras viviendas">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="tipo_pueblo" name="tipoVivienda" value="pueblo" onchange="calcular()">
+                                    <label for="tipo_pueblo" class="radio-label">
+                                        Casa de Pueblo
+                                        <span class="info-icon" data-tooltip="Vivienda unifamiliar en poblaciones de -10.000 habitantes con paredes colindantes">i</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RÉGIMEN CON RADIO BUTTONS -->
+                        <div class="form-group">
+                            <label style="margin-bottom: 12px;">Régimen * <span class="info-icon" data-tooltip="Situación de ocupación de la vivienda">i</span></label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="reg_propio" name="regimen" value="propietario-uso-propio" checked onchange="calcular()">
+                                    <label for="reg_propio" class="radio-label">
+                                        Propietario Uso Propio
+                                        <span class="info-icon" data-tooltip="El propietario reside en la vivienda como residencia principal">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="reg_alquila" name="regimen" value="propietario-alquila" onchange="calcular()">
+                                    <label for="reg_alquila" class="radio-label">
+                                        Propietario que Alquila
+                                        <span class="info-icon" data-tooltip="El propietario alquila la vivienda a terceros">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="reg_inquilino" name="regimen" value="inquilino" onchange="calcular()">
+                                    <label for="reg_inquilino" class="radio-label">
+                                        Inquilino
+                                        <span class="info-icon" data-tooltip="La persona que renta la vivienda es quien contrata el seguro">i</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- USO CON RADIO BUTTONS -->
+                        <div class="form-group">
+                            <label style="margin-bottom: 12px;">Uso * <span class="info-icon" data-tooltip="Frecuencia de ocupación de la vivienda">i</span></label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="uso_habitual" name="uso" value="habitual" checked onchange="calcular()">
+                                    <label for="uso_habitual" class="radio-label">
+                                        Habitual
+                                        <span class="info-icon" data-tooltip="Residencia principal, no deshabitada más de 30 días consecutivos/año">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="uso_fin_semana" name="uso" value="fin-semana" onchange="calcular()">
+                                    <label for="uso_fin_semana" class="radio-label">
+                                        Fin de Semana
+                                        <span class="info-icon" data-tooltip="No reside habitualmente, pero habita al menos una vez al mes">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="uso_vacaciones" name="uso" value="vacaciones" onchange="calcular()">
+                                    <label for="uso_vacaciones" class="radio-label">
+                                        Vacaciones
+                                        <span class="info-icon" data-tooltip="No reside habitualmente, pero habita al menos 15 días al año">i</span>
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="uso_desocupada" name="uso" value="desocupada" onchange="calcular()">
+                                    <label for="uso_desocupada" class="radio-label">
+                                        Desocupada
+                                        <span class="info-icon" data-tooltip="Se reside un período inferior a 15 días al año">i</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HABITACIONES Y PERSONAS -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nº Habitaciones * <span class="info-icon" data-tooltip="Número de habitaciones + salones (sin baño ni cocina)">i</span></label>
+                                <select id="habitaciones" class="blue-input" onchange="calcular()">
+                                    <option value="">Selecciona...</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4" selected>4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Nº Personas * <span class="info-icon" data-tooltip="Número de personas que viven en la vivienda">i</span></label>
+                                <select id="personas" class="blue-input" onchange="calcular()">
+                                    <option value="">Selecciona...</option>
+                                    <option value="0">0</option>
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="button" onclick="calcular()">🔄 Recalcular</button>
+                        <button class="button secondary" onclick="limpiar()">🗑️ Limpiar</button>
+                        <button class="button secondary" onclick="descargarImagen()" style="background: #28a745; border-color: #28a745; color: white;">📥 Descargar</button>
+                    </div>
+                </div>
+
+                <!-- LADO DERECHO: TABLA -->
+                <div class="calc-right">
+                    <h2 style="color: #333; margin-bottom: 15px; text-align: center; font-size: 14px; font-weight: bold;">Cálculo Capitales Recomendados en cotización/póliza NGP</h2>
+                    
+                    <table class="data-table">
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold; width: 60%;">Superficie</td>
+                            <td style="border: 1px solid #999; padding: 8px; background: #fffacd; font-weight: bold; text-align: right;" id="sup_result">100 m²</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Tipo de vivienda</td>
+                            <td style="border: 1px solid #999; padding: 8px; background: #e6f2ff;" id="tipo_result">Piso / Piso dúplex</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Régimen</td>
+                            <td style="border: 1px solid #999; padding: 8px; background: #e6f2ff;" id="regimen_result">Propietario uso propio</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Uso</td>
+                            <td style="border: 1px solid #999; padding: 8px; background: #e6f2ff;" id="uso_result">Habitual</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Nº habitaciones</td>
+                            <td style="border: 1px solid #999; padding: 8px; background: #e6f2ff; text-align: right;" id="hab_result">4</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Nº personas</td>
+                            <td style="border: 1px solid #999; padding: 8px; background: #e6f2ff; text-align: right;" id="per_result">1</td>
+                        </tr>
+                    </table>
+
+                    <div style="height: 15px;"></div>
+
+                    <table class="data-table">
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold; width: 60%;">Valor unitario</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;" id="vunit_result">830,40 €</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Módulo básico</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;" id="mbasico_result">830,40 €</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Módulo básico inicial</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;">800</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Coeficiente corrector</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;" id="coef_result">1,038</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Factor tipo vivienda</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;" id="fviv_result">1,00</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Factor zona</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;">1</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Factor revalorización</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;" id="frevalo_result">1,122</td>
+                        </tr>
+                        <tr style="background: #c6e0b4; font-weight: bold;">
+                            <td style="border: 2px solid #999; padding: 10px; font-size: 16px;">Continente recomendado</td>
+                            <td style="border: 2px solid #999; padding: 10px; text-align: right; font-size: 16px;" id="continente_result">93.129,41 €</td>
+                        </tr>
+                    </table>
+
+                    <table class="data-table" style="margin-top: 20px;">
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold; width: 60%;">Mínimo</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;" id="min_result">9.000 €</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Valor m2</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;" id="vm2_result">136 €/m²</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Valor habitación</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;">850 €</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 8px; font-weight: bold;">Valor persona</td>
+                            <td style="border: 1px solid #999; padding: 8px; text-align: right;">1.275 €</td>
+                        </tr>
+                        <tr style="background: #c6e0b4; font-weight: bold;">
+                            <td style="border: 2px solid #999; padding: 10px; font-size: 16px;">Contenido recomendado</td>
+                            <td style="border: 2px solid #999; padding: 10px; text-align: right; font-size: 16px;" id="contenido_result">35.175,00 €</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: GLOSARIO - ELIMINADA -->
+        <!-- TAB: ESTADÍSTICAS - ELIMINADA -->
+    </div>
+
+    <script>
+        // Datos de factores por tipo de vivienda
+        const datosVivienda = {
+            'piso': { 
+                factor: 1.0, 
+                minContinente: 30000, 
+                maxContinente: 600000 
+            },
+            'adosado': { 
+                factor: 1.17, 
+                minContinente: 30000, 
+                maxContinente: 600000 
+            },
+            'independiente': { 
+                factor: 1.27, 
+                minContinente: 30000, 
+                maxContinente: 600000 
+            },
+            'pueblo': { 
+                factor: 0.8, 
+                minContinente: 30000, 
+                maxContinente: 600000 
+            }
+        };
+
+        // Tabla de valores por concatenado Uso/Régimen
+        // Orden: Mínimo, Valor m2, Valor habitación, Valor persona
+        const valoresContenido = {
+            'HabitualPropietario uso propio': { min: 9000, vm2: 136, vhab: 850, vper: 1275 },
+            'HabitualPropietario que alquila': { min: 4500, vm2: 81, vhab: 510, vper: 0 },
+            'HabitualInquilino': { min: 7000, vm2: 115, vhab: 765, vper: 1275 },
+            'Fin de semanaPropietario uso propio': { min: 6500, vm2: 94, vhab: 680, vper: 850 },
+            'Fin de semanaPropietario que alquila': { min: 3500, vm2: 55, vhab: 425, vper: 0 },
+            'Fin de semanaInquilino': { min: 4000, vm2: 81, vhab: 553, vper: 850 },
+            'VacacionesPropietario uso propio': { min: 6500, vm2: 94, vhab: 680, vper: 850 },
+            'VacacionesPropietario que alquila': { min: 3500, vm2: 55, vhab: 425, vper: 0 },
+            'VacacionesInquilino': { min: 4000, vm2: 81, vhab: 553, vper: 850 },
+            'DesocupadaPropietario uso propio': { min: 3000, vm2: 51, vhab: 340, vper: 0 },
+            'DesocupadaPropietario que alquila': { min: 3000, vm2: 51, vhab: 340, vper: 0 },
+            'DesocupadaInquilino': { min: 3000, vm2: 51, vhab: 340, vper: 0 }
+        };
+
+        // Mapa de concatenados para búsqueda
+        const minimoContenidoMap = {
+            'habitual-propietario-uso-propio': 'HabitualPropietario uso propio',
+            'habitual-propietario-alquila': 'HabitualPropietario que alquila',
+            'habitual-inquilino': 'HabitualInquilino',
+            'fin-semana-propietario-uso-propio': 'Fin de semanaPropietario uso propio',
+            'fin-semana-propietario-alquila': 'Fin de semanaPropietario que alquila',
+            'fin-semana-inquilino': 'Fin de semanaInquilino',
+            'vacaciones-propietario-uso-propio': 'VacacionesPropietario uso propio',
+            'vacaciones-propietario-alquila': 'VacacionesPropietario que alquila',
+            'vacaciones-inquilino': 'VacacionesInquilino',
+            'desocupada-propietario-uso-propio': 'DesocupadaPropietario uso propio',
+            'desocupada-propietario-alquila': 'DesocupadaPropietario que alquila',
+            'desocupada-inquilino': 'DesocupadaInquilino'
+        };
+
+        function switchTab(tabName) {
+            // Función para cambiar tabs (no se usa actualmente)
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const tab = document.getElementById(tabName);
+            if (tab) {
+                tab.classList.add('active');
+            }
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        function calcular() {
+            const superficie = parseFloat(document.getElementById('superficie').value) || 0;
+            const tipoVivienda = document.querySelector('input[name="tipoVivienda"]:checked')?.value;
+            const regimen = document.querySelector('input[name="regimen"]:checked')?.value;
+            const uso = document.querySelector('input[name="uso"]:checked')?.value;
+            const habitaciones = parseInt(document.getElementById('habitaciones').value) || 0;
+            const personas = parseInt(document.getElementById('personas').value) || 0;
+
+            if (!superficie || !tipoVivienda || !regimen || !uso || !habitaciones || personas === '') {
+                return;
+            }
+
+            // Actualizar campos mostrados
+            document.getElementById('sup_result').textContent = superficie + ' m²';
+            
+            const tiposViviendaTexto = {
+                'piso': 'Piso / Piso dúplex',
+                'adosado': 'Chalé Adosado',
+                'independiente': 'Chalé Independiente',
+                'pueblo': 'Casa de pueblo'
+            };
+            document.getElementById('tipo_result').textContent = tiposViviendaTexto[tipoVivienda];
+
+            const regimenesTexto = {
+                'propietario-uso-propio': 'Propietario uso propio',
+                'propietario-alquila': 'Propietario que alquila',
+                'inquilino': 'Inquilino'
+            };
+            document.getElementById('regimen_result').textContent = regimenesTexto[regimen];
+
+            const usosTexto = {
+                'habitual': 'Habitual',
+                'fin-semana': 'Fin de semana',
+                'vacaciones': 'Vacaciones',
+                'desocupada': 'Desocupada'
+            };
+            document.getElementById('uso_result').textContent = usosTexto[uso];
+            document.getElementById('hab_result').textContent = habitaciones;
+            document.getElementById('per_result').textContent = personas;
+
+            // FÓRMULAS DEL EXCEL - HOJA "Cálculo Capitales Recomenda (f)"
+            const moduloBasicoInicial = 800;
+            const factorZona = 1;
+            const factorRevalorizacion = 1.1219; // C57
+
+            // C54: Coeficiente corrector
+            const numerador = (1.1 * moduloBasicoInicial * superficie) - (0.5 * (superficie ** 2));
+            const denominador = superficie * moduloBasicoInicial;
+            const coeficienteSinRedondear = numerador / denominador;
+            const coeficiente = Math.round(coeficienteSinRedondear * 1000) / 1000;
+            const coeficienteFinal = Math.max(coeficiente, 0.9);
+
+            // C55: Factor tipo vivienda
+            const datosViv = datosVivienda[tipoVivienda];
+            const factorVivienda = datosViv.factor;
+
+            // C52: Módulo básico = ROUND((C53*C54),3)
+            const moduloBasico = Math.round(moduloBasicoInicial * coeficienteFinal * 1000) / 1000;
+
+            // C51: Valor unitario = ROUND((C52*C55*C56),3)
+            const valorUnitario = Math.round(moduloBasico * factorVivienda * factorZona * 1000) / 1000;
+
+            // C58: Continente recomendado (CON FACTOR REVALORIZACIÓN)
+            const continenteBase = superficie * valorUnitario;
+            let continenteSinFactor;
+            if (continenteBase > datosViv.maxContinente) {
+                continenteSinFactor = datosViv.maxContinente;
+            } else if (continenteBase > datosViv.minContinente) {
+                continenteSinFactor = Math.round(continenteBase);
+            } else {
+                continenteSinFactor = datosViv.minContinente;
+            }
+            const continenteRecomendado = continenteSinFactor * factorRevalorizacion;
+
+            // Actualizar tabla de cálculos continente
+            document.getElementById('vunit_result').textContent = formatNumberDecimal(valorUnitario) + ' €';
+            document.getElementById('mbasico_result').textContent = formatNumberDecimal(moduloBasico) + ' €';
+            document.getElementById('coef_result').textContent = coeficienteFinal.toFixed(3);
+            document.getElementById('fviv_result').textContent = factorVivienda.toFixed(2);
+            document.getElementById('frevalo_result').textContent = factorRevalorizacion.toFixed(3);
+
+            // ===== CÁLCULO DE CONTENIDO =====
+            const valoresKey = minimoContenidoMap[uso + '-' + regimen];
+            const valores = valoresContenido[valoresKey] || valoresContenido['HabitualPropietario uso propio'];
+
+            // C60-C63: Obtener valores según concatenado
+            const minContenido = valores.min;
+            const valorM2 = valores.vm2;
+            const valorHabitacion = valores.vhab;
+            const valorPersona = valores.vper;
+
+            // C64: Contenido recomendado (CON FACTOR REVALORIZACIÓN)
+            const contenidoCalc = minContenido + (valorM2 * superficie) + (valorHabitacion * habitaciones) + (valorPersona * personas);
+            const contenidoSinFactor = Math.max(contenidoCalc, minContenido);
+            const contenidoRecomendado = contenidoSinFactor * factorRevalorizacion;
+
+            // Actualizar tabla de contenido
+            document.getElementById('min_result').textContent = formatNumberDecimal(minContenido) + ' €';
+            document.getElementById('vm2_result').textContent = formatNumberDecimal(valorM2) + ' €/m²';
+
+            // Mostrar resultados finales
+            document.getElementById('continente_result').textContent = formatNumberDecimal(continenteRecomendado) + ' €';
+            document.getElementById('contenido_result').textContent = formatNumberDecimal(contenidoRecomendado) + ' €';
+        }
+
+        function limpiar() {
+            document.getElementById('superficie').value = '100';
+            document.getElementById('tipo_piso').checked = true;
+            document.getElementById('reg_propio').checked = true;
+            document.getElementById('uso_habitual').checked = true;
+            document.getElementById('habitaciones').value = '4';
+            document.getElementById('personas').value = '1';
+            calcular();
+        }
+
+        function descargarImagen() {
+            // Crear un div temporal con solo la tabla
+            const tablaDiv = document.querySelector('.calc-right');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Crear una imagen PNG simple con la tabla
+            const datos = {
+                superficie: document.getElementById('sup_result').textContent,
+                tipoVivienda: document.getElementById('tipo_result').textContent,
+                regimen: document.getElementById('regimen_result').textContent,
+                uso: document.getElementById('uso_result').textContent,
+                habitaciones: document.getElementById('hab_result').textContent,
+                personas: document.getElementById('per_result').textContent,
+                valorUnitario: document.getElementById('vunit_result').textContent,
+                moduloBasico: document.getElementById('mbasico_result').textContent,
+                coeficiente: document.getElementById('coef_result').textContent,
+                factorVivienda: document.getElementById('fviv_result').textContent,
+                factorRevalorizacion: document.getElementById('frevalo_result').textContent,
+                continente: document.getElementById('continente_result').textContent,
+                minimo: document.getElementById('min_result').textContent,
+                valorM2: document.getElementById('vm2_result').textContent,
+                contenido: document.getElementById('contenido_result').textContent
+            };
+
+            // Crear HTML para la imagen
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background: white;
+                            padding: 20px;
+                            margin: 0;
+                        }
+                        .container {
+                            max-width: 800px;
+                            margin: 0 auto;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 20px;
+                            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+                            padding: 20px;
+                            border-radius: 8px;
+                        }
+                        .header h1 {
+                            color: white;
+                            font-size: 20px;
+                            margin: 5px 0;
+                            font-weight: bold;
+                        }
+                        .header p {
+                            color: rgba(255, 255, 255, 0.9);
+                            font-size: 12px;
+                            margin: 5px 0;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 15px;
+                        }
+                        table td {
+                            border: 1px solid #999;
+                            padding: 8px;
+                            font-size: 12px;
+                        }
+                        table td:first-child {
+                            font-weight: bold;
+                            width: 60%;
+                        }
+                        table td:last-child {
+                            text-align: right;
+                        }
+                        .yellow {
+                            background-color: #fffacd;
+                        }
+                        .blue {
+                            background-color: #e6f2ff;
+                        }
+                        .green {
+                            background-color: #c6e0b4;
+                            font-weight: bold;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>Cálculo Capitales Recomendados LDA 2026</h1>
+                            <p>Herramienta de cálculo de capitales recomendados para seguros de vivienda</p>
+                        </div>
+
+                        <table>
+                            <tr><td class="yellow">Superficie</td><td class="yellow">${datos.superficie}</td></tr>
+                            <tr><td class="blue">Tipo de vivienda</td><td class="blue">${datos.tipoVivienda}</td></tr>
+                            <tr><td class="blue">Régimen</td><td class="blue">${datos.regimen}</td></tr>
+                            <tr><td class="blue">Uso</td><td class="blue">${datos.uso}</td></tr>
+                            <tr><td class="blue">Nº habitaciones</td><td class="blue">${datos.habitaciones}</td></tr>
+                            <tr><td class="blue">Nº personas</td><td class="blue">${datos.personas}</td></tr>
+                        </table>
+
+                        <table>
+                            <tr><td>Valor unitario</td><td>${datos.valorUnitario}</td></tr>
+                            <tr><td>Módulo básico</td><td>${datos.moduloBasico}</td></tr>
+                            <tr><td>Módulo básico inicial</td><td>800</td></tr>
+                            <tr><td>Coeficiente corrector</td><td>${datos.coeficiente}</td></tr>
+                            <tr><td>Factor tipo vivienda</td><td>${datos.factorVivienda}</td></tr>
+                            <tr><td>Factor zona</td><td>1</td></tr>
+                            <tr><td>Factor revalorización</td><td>${datos.factorRevalorizacion}</td></tr>
+                            <tr class="green"><td>Continente recomendado</td><td>${datos.continente}</td></tr>
+                        </table>
+
+                        <table>
+                            <tr><td>Mínimo</td><td>${datos.minimo}</td></tr>
+                            <tr><td>Valor m2</td><td>${datos.valorM2}</td></tr>
+                            <tr><td>Valor habitación</td><td>850 €</td></tr>
+                            <tr><td>Valor persona</td><td>1.275 €</td></tr>
+                            <tr class="green"><td>Contenido recomendado</td><td>${datos.contenido}</td></tr>
+                        </table>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            // Usar html2canvas si está disponible, si no usar método alternativo
+            if (typeof html2canvas !== 'undefined') {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = htmlContent;
+                document.body.appendChild(tempDiv);
+                
+                html2canvas(tempDiv, {
+                    backgroundColor: 'white',
+                    scale: 2,
+                    logging: false
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'calcular-capitales-' + new Date().toISOString().split('T')[0] + '.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                    document.body.removeChild(tempDiv);
+                });
+            } else {
+                // Opción alternativa: abrir en nueva ventana para imprimir
+                const printWindow = window.open('', '', 'height=600,width=800');
+                printWindow.document.write(htmlContent);
+                printWindow.document.close();
+                printWindow.print();
+            }
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('es-ES', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(num);
+        }
+
+        function formatNumberTable(num) {
+            return new Intl.NumberFormat('es-ES', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 3
+            }).format(num);
+        }
+
+        function formatNumberDecimal(num) {
+            return new Intl.NumberFormat('es-ES', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        }
+
+        // Cargar cálculo inicial
+        window.addEventListener('load', calcular);
+    </script>
+</body>
+</html>
